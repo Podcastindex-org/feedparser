@@ -45,6 +45,43 @@ The output item file format is a JSON object with the following fields:
 Sample input and output files are available in the [sample_inputs](sample_inputs) and [sample_outputs](sample_outputs) directories. The files from the sample_inputs directory 
 can be moved into the [inputs](inputs) directory to be processed for testing.
 
+## Development Setup
+
+### Using Nix Flake (Recommended for NixOS)
+This project includes a Nix flake for reproducible development environments:
+
+```bash
+# Enter the development shell
+nix develop
+
+# Or use direnv for automatic environment loading
+direnv allow
+
+# Build the project
+nix build
+
+# Run the project
+nix run
+```
+
+The flake provides:
+- Rust stable toolchain with rust-analyzer
+- All necessary build dependencies
+- Reproducible development environment
+
+### Traditional Setup
+Ensure you have Rust and Cargo installed, then:
+
+```bash
+# Build the project
+cargo build
+
+# Run the project
+cargo run
+
+# Run tests
+cargo test
+```
 
 # Contributors
 - Dave Jones (gh: [@daveajones](https://github.com/daveajones))
