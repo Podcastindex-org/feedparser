@@ -36,7 +36,8 @@ Two logical tables are emitted:
     - podcast_funding.rs — `podcast:funding` url/text capture within items
 - inputs/ — place source files to be parsed
 - outputs/ — generated per-run subfolders with JSON outputs
-- sample_inputs/, sample_outputs/ — examples
+- sample_inputs.tar.gz, sample_outputs.tar.gz — compressed example files (extract with `tar -xzf`)
+- .llm_history/ — session logs from LLM-assisted development (format: `YYYYMMDD_N.md`)
 
 ## Build, Run, Test
 - Build:

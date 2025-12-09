@@ -42,8 +42,15 @@ The output item file format is a JSON object with the following fields:
 - podcast_funding_text:  the item podcast:funding text (if available)
 
 ## Sample data
-Sample input and output files are available in the [sample_inputs](sample_inputs) and [sample_outputs](sample_outputs) directories. The files from the sample_inputs directory 
-can be moved into the [inputs](inputs) directory to be processed for testing.
+Sample input and output files are available as compressed archives: `sample_inputs.tar.gz` and `sample_outputs.tar.gz`.
+
+To extract the samples for testing:
+```bash
+tar -xzf sample_inputs.tar.gz
+tar -xzf sample_outputs.tar.gz
+```
+
+The files from the `sample_inputs` directory can be moved into the [inputs](inputs) directory to be processed for testing.
 
 ## Development Setup
 
