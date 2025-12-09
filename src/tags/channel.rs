@@ -8,6 +8,7 @@ pub fn on_start(state: &mut ParserState) {
     state.channel_link.clear();
     state.channel_description.clear();
     state.channel_generator.clear();
+    state.channel_language.clear();
     state.channel_itunes_author.clear();
 }
 

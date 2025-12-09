@@ -14,6 +14,7 @@ pub mod itunes_image;
 pub mod podcast_funding;
 pub mod generator;
 pub mod itunes_author;
+pub mod language;
 
 pub fn dispatch_start(name: &OwnedName, attributes: &[OwnedAttribute], state: &mut ParserState) {
     // Basic element-based handlers
@@ -37,6 +38,7 @@ pub fn dispatch_text(current_element: &str, data: &str, state: &mut ParserState)
         "link" => link::on_text(data, state),
         "description" => description::on_text(data, state),
         "generator" => generator::on_text(data, state),
+        "language" => language::on_text(data, state),
         "pubDate" => pub_date::on_text(data, state),
         _ => {}
     }

@@ -6,6 +6,7 @@ pub struct ParserState {
     pub channel_link: String,
     pub channel_description: String,
     pub channel_generator: String,
+    pub channel_language: String,
     pub channel_itunes_author: String,
 
     pub in_item: bool,

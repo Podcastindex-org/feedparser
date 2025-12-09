@@ -56,12 +56,12 @@ Two logical tables are emitted:
 
 ## JSON Schemas
 - newsfeeds
-  - columns: `["feed_id", "title", "link", "description", "generator"]`
-  - values: `[feed_id or null, channel_title.trim(), channel_link.trim(), channel_description.trim(), channel_generator.trim()]`
+  - columns: `["feed_id", "title", "link", "description", "generator", "itunes_author", "language"]`
+  - values: `[feed_id or null, channel_title.trim(), channel_link.trim(), channel_description.trim(), channel_generator.trim(), channel_itunes_author.trim(), channel_language.trim()]`
 
 - nfitems
-  - columns: `["feed_id", "title", "link", "description", "pub_date", "itunes_image", "podcast_funding_url", "podcast_funding_text"]`
-  - values: `[feed_id or null, title, link, description.trim(), pub_date, itunes_image, podcast_funding_url, podcast_funding_text.trim()]`
+  - columns: `["feed_id", "title", "link", "description", "pub_date", "itunes_image", "itunes_author", "podcast_funding_url", "podcast_funding_text"]`
+  - values: `[feed_id or null, title, link, description.trim(), pub_date, itunes_image, item_itunes_author.trim(), podcast_funding_url, podcast_funding_text.trim()]`
 
 Note: CDATA sections are treated like normal text; both `Characters` and `CData` XML events are accumulated.
 
