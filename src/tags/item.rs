@@ -8,9 +8,11 @@ pub fn on_start(state: &mut ParserState) {
     state.description.clear();
     state.pub_date.clear();
     state.itunes_image.clear();
+    state.item_itunes_author.clear();
     state.podcast_funding_url.clear();
     state.podcast_funding_text.clear();
     state.in_podcast_funding = false;
+    state.in_itunes_author = false;
 }
 
 pub fn on_end(feed_id: Option<i64>, state: &mut ParserState) {

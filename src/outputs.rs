@@ -50,6 +50,7 @@ pub fn write_newsfeeds(state: &ParserState, feed_id: Option<i64>) {
             "link".to_string(),
             "description".to_string(),
             "generator".to_string(),
+            "itunes_author".to_string(),
         ],
         values: vec![
             match feed_id { Some(v) => JsonValue::from(v), None => JsonValue::Null },
@@ -57,6 +58,7 @@ pub fn write_newsfeeds(state: &ParserState, feed_id: Option<i64>) {
             JsonValue::from(state.channel_link.trim().to_string()),
             JsonValue::from(state.channel_description.trim().to_string()),
             JsonValue::from(state.channel_generator.trim().to_string()),
+            JsonValue::from(state.channel_itunes_author.trim().to_string()),
         ],
         feed_id,
     };
@@ -73,6 +75,7 @@ pub fn write_nfitems(state: &ParserState, feed_id: Option<i64>) {
             "description".to_string(),
             "pub_date".to_string(),
             "itunes_image".to_string(),
+            "itunes_author".to_string(),
             "podcast_funding_url".to_string(),
             "podcast_funding_text".to_string(),
         ],
@@ -84,6 +87,7 @@ pub fn write_nfitems(state: &ParserState, feed_id: Option<i64>) {
             JsonValue::from(state.description.trim().to_string()),
             JsonValue::from(state.pub_date.clone()),
             JsonValue::from(state.itunes_image.clone()),
+            JsonValue::from(state.item_itunes_author.clone()),
             JsonValue::from(state.podcast_funding_url.clone()),
             JsonValue::from(state.podcast_funding_text.trim().to_string()),
         ],

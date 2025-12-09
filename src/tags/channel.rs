@@ -8,6 +8,7 @@ pub fn on_start(state: &mut ParserState) {
     state.channel_link.clear();
     state.channel_description.clear();
     state.channel_generator.clear();
+    state.channel_itunes_author.clear();
 }
 
 pub fn on_end(feed_id: Option<i64>, state: &mut ParserState) {

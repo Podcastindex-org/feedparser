@@ -13,6 +13,7 @@ pub mod image;
 pub mod itunes_image;
 pub mod podcast_funding;
 pub mod generator;
+pub mod itunes_author;
 
 pub fn dispatch_start(name: &OwnedName, attributes: &[OwnedAttribute], state: &mut ParserState) {
     // Basic element-based handlers
@@ -26,6 +27,7 @@ pub fn dispatch_start(name: &OwnedName, attributes: &[OwnedAttribute], state: &m
     // Namespace-sensitive handlers
     itunes_image::on_start(name, attributes, state);
     podcast_funding::on_start(name, attributes, state);
+    itunes_author::on_start(name, attributes, state);
 }
 
 pub fn dispatch_text(current_element: &str, data: &str, state: &mut ParserState) {
@@ -41,6 +43,7 @@ pub fn dispatch_text(current_element: &str, data: &str, state: &mut ParserState)
 
     // Some text handlers depend on context flags rather than element name
     podcast_funding::on_text(data, state);
+    itunes_author::on_text(current_element, data, state);
 }
 
 pub fn dispatch_end(name: &OwnedName, feed_id: Option<i64>, state: &mut ParserState) {
@@ -51,4 +54,6 @@ pub fn dispatch_end(name: &OwnedName, feed_id: Option<i64>, state: &mut ParserSt
         "funding" => podcast_funding::on_end(state),
         _ => {}
     }
+    // Namespace-sensitive end handlers
+    itunes_author::on_end(name, state);
 }
