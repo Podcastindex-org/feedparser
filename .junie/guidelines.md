@@ -89,8 +89,9 @@ To add support for a new XML element:
 - Parsing is streaming/event-based using `xml-rs` and accumulates text only for relevant tags.
 
 ## When coding with LLM's
-- AI agents should write an overview of all changes made to a new markdown file in the .llm_history directory.
+- AI agents should write an overview of all changes made, including the prompts given which triggered the changes, to a new markdown file in the .llm_history directory.
 - AI agents should modify the .junie/guidelines.md file to reflect any changes made to the project.
+
 
 ## Submission Checklist for Changes
 - If code was modified:
