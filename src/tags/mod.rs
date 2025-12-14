@@ -1,5 +1,4 @@
 use xml::attribute::OwnedAttribute;
-use xml::name::OwnedName;
 
 use crate::parser_state::ParserState;
 
@@ -15,19 +14,16 @@ pub mod podcast_funding;
 pub mod generator;
 pub mod itunes_author;
 
-pub fn dispatch_start(name: &OwnedName, attributes: &[OwnedAttribute], state: &mut ParserState) {
+pub fn dispatch_start(current_element: &str, attributes: &[OwnedAttribute], state: &mut ParserState) {
     // Basic element-based handlers
-    match name.local_name.as_str() {
+    match current_element {
         "channel" => channel::on_start(state),
         "item" => item::on_start(state),
         "image" => image::on_start(state),
+        "itunes:image" => itunes_image::on_start(attributes, state),
+        "podcast:funding" => podcast_funding::on_start(attributes, state),
         _ => {}
     }
-
-    // Namespace-sensitive handlers
-    itunes_image::on_start(name, attributes, state);
-    podcast_funding::on_start(name, attributes, state);
-    itunes_author::on_start(name, attributes, state);
 }
 
 pub fn dispatch_text(current_element: &str, data: &str, state: &mut ParserState) {
@@ -38,22 +34,18 @@ pub fn dispatch_text(current_element: &str, data: &str, state: &mut ParserState)
         "description" => description::on_text(data, state),
         "generator" => generator::on_text(data, state),
         "pubDate" => pub_date::on_text(data, state),
+        "podcast:funding" => podcast_funding::on_text(data, state),
+        "itunes:author" => itunes_author::on_text(data, state),
         _ => {}
     }
-
-    // Some text handlers depend on context flags rather than element name
-    podcast_funding::on_text(data, state);
-    itunes_author::on_text(current_element, data, state);
 }
 
-pub fn dispatch_end(name: &OwnedName, feed_id: Option<i64>, state: &mut ParserState) {
-    match name.local_name.as_str() {
+pub fn dispatch_end(current_element: &str, feed_id: Option<i64>, state: &mut ParserState) {
+    match current_element {
         "channel" => channel::on_end(feed_id, state),
         "item" => item::on_end(feed_id, state),
         "image" => image::on_end(state),
-        "funding" => podcast_funding::on_end(state),
+        "podcast:funding" => podcast_funding::on_end(state),
         _ => {}
     }
-    // Namespace-sensitive end handlers
-    itunes_author::on_end(name, state);
 }
