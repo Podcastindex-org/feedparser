@@ -1,5 +1,84 @@
+use chrono::DateTime;
 use xml::ParserConfig;
 
+
+pub fn truncate_string(s: &str, length: usize) -> String {
+    s.chars().take(length).collect()
+}
+
+pub fn pub_date_to_timestamp(pub_date: &str) -> i64 {
+    let pub_date_str = pub_date.trim();
+    if pub_date_str.is_empty() {
+        return 0; // bad pub date, return 0
+    }
+
+    if let Ok(num) = pub_date_str.parse::<i64>() {
+        return num; // already a timestamp
+    }
+
+    // parse rfc 2882 (rss spec) and iso 8601 (rfc 3339)
+    DateTime::parse_from_rfc2822(pub_date_str)
+        .or_else(|_| DateTime::parse_from_rfc3339(pub_date_str))
+        .map(|dt| dt.timestamp())
+        .unwrap_or(0) // return timestamp or 0 if error
+}
+
+//Get a mime-type string for an unknown media enclosure
+pub fn guess_enclosure_type(url: &str) -> String {
+    if url.contains(".m4v") {
+        return "video/mp4".to_string();
+    }
+    if url.contains(".mp4") {
+        return "video/mp4".to_string();
+    }
+    if url.contains(".avi") {
+        return "video/avi".to_string();
+    }
+    if url.contains(".mov") {
+        return "video/quicktime".to_string();
+    }
+    if url.contains(".mp3") {
+        return "audio/mpeg".to_string();
+    }
+    if url.contains(".m4a") {
+        return "audio/mp4".to_string();
+    }
+    if url.contains(".wav") {
+        return "audio/wav".to_string();
+    }
+    if url.contains(".ogg") {
+        return "audio/ogg".to_string();
+    }
+    if url.contains(".wmv") {
+        return "video/x-ms-wmv".to_string();
+    }
+
+    "".to_string()
+}
+
+/*
+* Convert time string to seconds
+* 01:02 = 62 seconds
+* Thanks to Glenn Bennett!
+*/
+pub fn time_to_seconds(time_string: &str) -> i32 {
+    let parts = time_string.split(':').collect::<Vec<&str>>();
+
+    match parts.len() - 1 {
+        1 => {
+            let minutes = parts[0].parse::<i32>().unwrap_or(0);
+            let seconds = parts[1].parse::<i32>().unwrap_or(0);
+            minutes * 60 + seconds
+        }
+        2 => {
+            let hours = parts[0].parse::<i32>().unwrap_or(0);
+            let minutes = parts[1].parse::<i32>().unwrap_or(0);
+            let seconds = parts[2].parse::<i32>().unwrap_or(0);
+            hours * 3600 + minutes * 60 + seconds
+        }
+        _ => time_string.parse::<i32>().unwrap_or(30 * 60),
+    }
+}
 
 pub fn add_html_entities_to_parser_config(config: ParserConfig) -> ParserConfig {
     config

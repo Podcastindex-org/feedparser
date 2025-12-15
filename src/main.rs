@@ -9,6 +9,7 @@ use xml::reader::{XmlEvent, ParserConfig};
 use xml::name::OwnedName;
 
 mod parser_state;
+mod models;
 mod tags;
 mod outputs;
 #[cfg(test)]
