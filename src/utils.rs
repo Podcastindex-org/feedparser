@@ -2,8 +2,43 @@ use chrono::DateTime;
 use xml::ParserConfig;
 
 
+pub fn clean_string(s: &str) -> String {
+    s.trim().replace(r#"(\r\n|\n|\r)"#, "")
+}
+
 pub fn truncate_string(s: &str, length: usize) -> String {
     s.chars().take(length).collect()
+}
+
+pub fn truncate_int(number: i32) -> i32 {
+    number.clamp(-2147483647, 2147483647)
+}
+
+fn contains_non_latin_codepoints(s: &str) -> bool {
+    s.chars().any(|c| c as u32 > 0x00FF)
+}
+
+fn replace_non_latin_characters(s: &str) -> String {
+    s.replace(r#"[^\x00-\x80]"#, " ")
+}
+
+pub fn sanitize_url(url: &str) -> String {
+    if url.is_empty() {
+        return String::new();
+    }
+
+    if contains_non_latin_codepoints(url) {
+        let encoded = urlencoding::encode(&url);
+        let mut new_url = truncate_string(&encoded, 768);
+
+        if contains_non_latin_codepoints(&new_url) {
+            new_url = replace_non_latin_characters(&new_url);
+        }
+
+        return truncate_string(&new_url, 768);
+    }
+
+    truncate_string(url, 768)
 }
 
 pub fn pub_date_to_timestamp(pub_date: &str) -> i64 {
@@ -21,6 +56,55 @@ pub fn pub_date_to_timestamp(pub_date: &str) -> i64 {
         .or_else(|_| DateTime::parse_from_rfc3339(pub_date_str))
         .map(|dt| dt.timestamp())
         .unwrap_or(0) // return timestamp or 0 if error
+}
+
+
+
+pub fn calculate_update_frequency(pubdates: &[i64]) -> i32 {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64;
+
+    let time_400_days_ago = now - (400 * 24 * 60 * 60);
+    let time_200_days_ago = now - (200 * 24 * 60 * 60);
+    let time_100_days_ago = now - (100 * 24 * 60 * 60);
+    let time_40_days_ago = now - (40 * 24 * 60 * 60);
+    let time_20_days_ago = now - (20 * 24 * 60 * 60);
+    let time_10_days_ago = now - (10 * 24 * 60 * 60);
+    let time_5_days_ago = now - (5 * 24 * 60 * 60);
+
+    if pubdates.iter().filter(|&&time| time > time_400_days_ago).count() == 0 {
+        return 9;
+    }
+    if pubdates.iter().filter(|&&time| time > time_200_days_ago).count() == 0 {
+        return 8;
+    }
+    if pubdates.iter().filter(|&&time| time > time_100_days_ago).count() == 0 {
+        return 7;
+    }
+    if pubdates.iter().filter(|&&time| time > time_5_days_ago).count() > 1 {
+        return 1;
+    }
+    if pubdates.iter().filter(|&&time| time > time_10_days_ago).count() > 1 {
+        return 2;
+    }
+    if pubdates.iter().filter(|&&time| time > time_20_days_ago).count() > 1 {
+        return 3;
+    }
+    if pubdates.iter().filter(|&&time| time > time_40_days_ago).count() > 1 {
+        return 4;
+    }
+    if pubdates.iter().filter(|&&time| time > time_100_days_ago).count() > 1 {
+        return 5;
+    }
+    if pubdates.iter().filter(|&&time| time > time_200_days_ago).count() > 1 {
+        return 6;
+    }
+    if pubdates.iter().filter(|&&time| time > time_400_days_ago).count() >= 1 {
+        return 7;
+    }
+    0
 }
 
 //Get a mime-type string for an unknown media enclosure
